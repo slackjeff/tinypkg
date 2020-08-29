@@ -47,8 +47,8 @@ tinypkg -i /tmp/*.tar
 - Use only the standard POSIX Shell
 - Do not include unnecessary things!
 
-## TODO
+## TODO (Urgent)
 - Create option to update available packages.
 - Make it even faster.
 - Remove dirt in the code. (How to replace external tools)
-- 
+- Create a post installation script
