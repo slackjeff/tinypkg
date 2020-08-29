@@ -1,6 +1,13 @@
 # Tinypkg is a low-level package manager, similar to 'dpkg' for Linux distributions, written in Shell POSIX.
 With you can: Create, install and remove packages in a universal way!
 
+### Install
+
+**Use tinypkg only with the root user!**
+```
+chmod +x tinypkg && cp tinypkg /usr/sbin
+```
+
 ### Options
 -h             : Display help. <br>
 -c             : Create package.<br>
