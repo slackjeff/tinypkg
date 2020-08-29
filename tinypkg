@@ -1,0 +1,141 @@
+#!/bin/dash
+################################################################
+# AUTOR   : Jefferson 'Slackjeff' Carneiro
+# EMAIL   : jeffersoncarneiro AT slackjeff dot com dot br
+# Tinypkg : Create, install, remove package.
+# VERSION : 1.0
+#
+#VERY IMPORTANT note!
+# keep this program < 250 lines of code! And also maintain
+# the POSIX Shell.
+################################################################
+
+#=========================== VARS
+# Format package.
+export pkgFormat='tar'
+
+# List of tracks
+export dbtinypkg='/var/db/tinypkg'
+
+# Support UNICODE off.
+export LC_ALL='C'; export LANG='C'
+
+#=========================== FUNCTIONS
+die() { printf '%s\n' "$@"; exit 1 ;} # All errors msgs ;)
+
+NULL() { [ -z "$1" ] && { echo "Name of package... SOFTWARE-VERSION.${pkgFormat}"; exit 1 ;} ;}
+
+# Make package
+CREATEPKG() {
+  # Check pkgformat is valid.
+  [ "$(echo "$1" | rev | cut -f 1 -d . | rev)" != "$pkgFormat" ] && die "$1 extension not supported."
+  # name of package have space?
+  case "$1" in *' '*) die "Please, don't use spaces." ;; esac
+  # creating the package a directory above.
+  if tar -cvf ../"$1" .; then
+    printf '%s\n' "../$1 The package was created successfully."
+  else
+    die "Error!"
+  fi
+}
+
+# Install package
+INSTALL() {
+  [ ! -d "$dbtinypkg" ] && mkdir "$dbtinypkg" # Exist db dir of tracks?
+  # VERIFY EXTENSION HERE
+  printf '%b\n' "Intall Package: $1"
+  # Install package
+  tar xvf "$1" -C "${FAKE}/" >> "${dbtinypkg}/$(basename $1)" || die "ERROR pkg $1 has not been installed."
+  # clean tracking
+  sed -i 's/^\.//g; /^\/$/d' "${dbtinypkg}/$(basename $1)" || printf '%s\n' "Error when clearing package track!"
+  pkg4strip="$1"
+  stripext="${pkg4strip%.$pkgFormat}"; stripext="$(basename $stripext)"
+  # Remove .extension of package, only pkg-version keep.
+  mv "${dbtinypkg}/$(basename $1)" "${dbtinypkg}/$stripext" || die "Error with the track."
+  # Ok ok
+  printf '%s\n' "DIR OF INSTALED: ${FAKE}/"
+  printf '%s\n' "TRACK: ${dbtinypkg}/$(basename $stripext)"
+  printf '%s\n' "------- Installation complete"
+  return 0
+}
+
+# Remove package
+REMOVE() {
+  # checking if there is more than one package with the same initials name
+  # Example: youtube-dl, youtube-upload. blablabla
+  # If it exists, we increment and just show pattern it to user.
+  mpkg=0 #more package
+  npkg=0 # no package found
+  cd "$dbtinypkg" # for dont use 'more and more' basename.
+  for list in *; do
+    if echo "$list" | grep -w -E "^$1" 1>/dev/null 2>/dev/null; then
+      printf '%s\n' "[FOUND] $list"
+      pkgtrack="$list"
+      mpkg="$((mpkg + 1))" # Inc
+     else
+      npkg="$((npkg + 1))"
+    fi
+  done
+  # If there is more than one pattern, print and exit.
+  if [ "$mpkg" -gt '1' ]; then
+    printf '%s\n' "$mpkg occurrences found with '$1'. Use full name to remove!"
+    exit 1
+  elif [ "$npkg" -gt '0' ] && [ "$mpkg" -lt '1' ]; then
+    printf '%s\n' "No matches for $1"
+    exit 0
+  fi
+
+  # Okay, if we find only one pattern, it's time to remove it.
+  while IFS= read -r tfile; do # remove files and symbolic links
+    if [ -f "$tfile" ]; then
+      rm "$tfile" 1>/dev/null 2>&1 && printf '%s\n' " DELETED: $tfile"
+    elif [ -L "$tfile" ]; then
+      rm -f "$tfile" 1>/dev/null 2>&1 && printf '%s\n' " DELETED LINK: $tfile"
+    fi
+  done < "$pkgtrack"
+
+  while IFS= read -r tdir; do # Remove empty dirs.
+    rm -d "$tdir" 1>/dev/null 2>&1 && printf '%s\n' " REMOVE DIR: $tdir"
+  done < "$pkgtrack"
+
+  # Remove track file in db
+  rm "$pkgtrack" && printf '%s\n' " REMOVE TRACK: $pkgtrack"
+}
+
+# Help
+USAGE() {
+  cat <<EOF
+  tinypkg: The fastest and small package manager
+
+-h             : Display this help.
+-c             : Create package.
+-i             : Install package(s).
+--fakeroot DIR : Changes installation / from another directory. Used with -i
+-r             : Remove package(s).
+
+EOF
+  exit 0
+}
+#=========================== MAIN
+# Not have any arguments?
+[ "$#" -eq '0' ] && USAGE
+
+# TODO
+# we can improve this parser in the POSIX way ;)
+while [ -n "$1" ]; do # Main loop
+case "$1" in
+  -c) shift; NULL "$1"; CREATEPKG "$1"; break ;;
+  --fakeroot)
+    shift
+    if [ ! -d "$1" ]; then
+      die "FAKEROOT: $1 don't exist. ABORTED"
+    else
+      FAKE="$1"
+      shift
+    fi
+    ;;
+  -i) shift; while [ -n "$1" ]; do INSTALL "$1"; shift; done ;;
+  -r) shift; while [ -n "$1" ]; do REMOVE "$1"; shift; done ;;
+  *) USAGE ;;
+esac
+done
