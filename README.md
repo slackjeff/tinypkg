@@ -2,11 +2,11 @@
 With you can: Create, install and remove packages in a universal way!
 
 ### Options
--h             : Display help.
--c             : Create package.
--i             : Install package(s).
---fakeroot DIR : Changes installation / from another directory. Used with -i
--r             : Remove package(s).
+-h             : Display help. <br>
+-c             : Create package.<br>
+-i             : Install package(s).<br>
+--fakeroot DIR : Changes installation / from another directory. Used with -i<br>
+-r             : Remove package(s).<br>
 
 ### USAGE Examples
 **Create package**
@@ -25,12 +25,13 @@ tinypkg -i /tmp/*.tar
 
 ```
 
+**Remove package**
+
 'Note! If there is more than one package with the same name for example: leafpad-version, leafpad-bin-version. It just shows you and does nothing!'
 
 ```
 tinypkg -r leafpad
 ```
-**Remove package**
 
 **TODO**:
 - Create option to update available packages.
