@@ -3,7 +3,7 @@
 # AUTOR   : Jefferson 'Slackjeff' Carneiro
 # EMAIL   : jeffersoncarneiro AT slackjeff dot com dot br
 # Tinypkg : Create, install, remove package.
-# VERSION : 1.0
+# VERSION : 1.1
 #
 #VERY IMPORTANT note!
 # keep this program < 250 lines of code! And also maintain
@@ -21,8 +21,8 @@ export dbtinypkg='/var/db/tinypkg'
 export LC_ALL='C'; export LANG='C'
 
 #=========================== FUNCTIONS
+basename() { printf '%s\n' "${1##*/}" ;} # An alternative to the real basename :)
 die() { printf '%s\n' "$@"; exit 1 ;} # All errors msgs ;)
-
 NULL() { [ -z "$1" ] && { echo "Name of package... SOFTWARE-VERSION.${pkgFormat}"; exit 1 ;} ;}
 
 # Make package
@@ -32,7 +32,7 @@ CREATEPKG() {
   # name of package have space?
   case "$1" in *' '*) die "Please, don't use spaces." ;; esac
   # creating the package a directory above.
-  if tar -cvf ../"$1" .; then
+  if tar -cf ../"$1" .; then
     printf '%s\n' "../$1 The package was created successfully."
   else
     die "Error!"
@@ -42,16 +42,22 @@ CREATEPKG() {
 # Install package
 INSTALL() {
   [ ! -d "$dbtinypkg" ] && mkdir "$dbtinypkg" # Exist db dir of tracks?
+
   # VERIFY EXTENSION HERE
   printf '%b\n' "Intall Package: $1"
+
   # Install package
   tar xvf "$1" -C "${FAKE}/" >> "${dbtinypkg}/$(basename $1)" || die "ERROR pkg $1 has not been installed."
+
   # clean tracking
   sed -i 's/^\.//g; /^\/$/d' "${dbtinypkg}/$(basename $1)" || printf '%s\n' "Error when clearing package track!"
-  pkg4strip="$1"
-  stripext="${pkg4strip%.$pkgFormat}"; stripext="$(basename $stripext)"
+
+  # Need these variables to move the track correctly.
+  pkg4strip="$1"; stripext="${pkg4strip%.$pkgFormat}"; stripext="$(basename $stripext)"
+
   # Remove .extension of package, only pkg-version keep.
   mv "${dbtinypkg}/$(basename $1)" "${dbtinypkg}/$stripext" || die "Error with the track."
+
   # Ok ok
   printf '%s\n' "DIR OF INSTALED: ${FAKE}/"
   printf '%s\n' "TRACK: ${dbtinypkg}/$(basename $stripext)"
