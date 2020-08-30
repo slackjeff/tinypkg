@@ -106,6 +106,14 @@ REMOVE() {
   rm "$pkgtrack" && printf '%s\n' " REMOVE TRACK: $pkgtrack"
 }
 
+# Lists installed packages
+LIST() {
+  for absolute_path in "${FAKE}/var/db/tinypkg"/*; do
+    package_name=$(printf '%s' "$absolute_path" | sed -e "s|.*/||")
+    printf '%s\n' "$package_name"
+  done
+}
+
 # Help
 USAGE() {
   cat <<EOF
@@ -114,6 +122,7 @@ USAGE() {
 -h             : Display this help.
 -c             : Create package.
 -i             : Install package(s).
+-l             : Lists installed package(s).
 --fakeroot DIR : Changes installation / from another directory. Used with -i
 -r             : Remove package(s).
 
@@ -138,6 +147,7 @@ case "$1" in
       shift
     fi
     ;;
+  -l) shift; LIST ;;
   -i) shift; while [ -n "$1" ]; do INSTALL "$1"; shift; done ;;
   -r) shift; while [ -n "$1" ]; do REMOVE "$1"; shift; done ;;
   *) USAGE ;;
