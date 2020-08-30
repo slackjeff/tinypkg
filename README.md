@@ -13,11 +13,12 @@ chmod +x tinypkg && cp tinypkg /usr/sbin
 
 ## Options
 
--h : Display help.
--c : Create package.
--i : Install package(s).
---fakeroot DIR : Changes installation / from another directory. Used with -i
--r : Remove package(s).
+- **-h**: Displays help.
+- **-c**: Creates a package.
+- **-i**: Installs packages.
+- **-r**: Removes packages.
+- **-l**: Lists installed packages.
+- **--fakeroot DIR**: Changes installation / from another directory. Used with -i
 
 ## USAGE Examples
 
@@ -27,7 +28,7 @@ chmod +x tinypkg && cp tinypkg /usr/sbin
 If spaces are needed use underscores. e.g.: Software_editor-01.0424.tar'
 
 ```sh
-# tinypkg -c leafpad-0.8.17.tar
+tinypkg -c leafpad-0.8.17.tar
 ```
 
 ### Installing packages
@@ -61,7 +62,7 @@ Make sure you follow these guidelines:
 
 ## Roadmap
 
-- [] Create option to update available packages.
-- [] Make it even faster.
-- [] Remove dirt in the code. (replacing external tools)
-- [] Create a post installation script
+- [ ] Create option to update available packages.
+- [ ] Make it even faster.
+- [ ] Remove dirt in the code. (replacing external tools)
+- [ ] Create a post installation script
