@@ -3,7 +3,7 @@
 # AUTOR   : Jefferson 'Slackjeff' Carneiro
 # EMAIL   : jeffersoncarneiro AT slackjeff dot com dot br
 # Tinypkg : Create, install, remove package.
-# VERSION : 1.1
+# VERSION : 1.1.1
 #
 #VERY IMPORTANT note!
 # keep this program < 250 lines of code! And also maintain
@@ -22,12 +22,18 @@ basename() { printf '%s\n' "${1##*/}" ;} # An alternative to the real basename :
 die() { printf '%s\n' "$@"; exit 1 ;} # All errors msgs ;)
 NULL() { [ -z "$1" ] && { echo "Name of package... SOFTWARE-VERSION.${pkgFormat}"; exit 1 ;} ;}
 
-# Make package
-CREATEPKG() {
-  # Check pkgformat is valid.
-  [ "$(echo "$1" | rev | cut -f 1 -d . | rev)" != "$pkgFormat" ] && die "$1 extension not supported."
+# Check package extension and blabla.
+CHECKEXT() {
+  # Created with tinypkg?
+  [ "$(printf '%s\n' ${1#*.})" != "$pkgFormat" ] && die "$1 Not created with tinypkg."
+
   # name of package have space?
   case "$1" in *' '*) die "Please, don't use spaces." ;; esac
+}
+
+# Make package
+CREATEPKG() {
+  CHECKEXT "$(basename $1)" # Check's of name package
   # creating the package a directory above.
   if tar -cf ../"$1" .; then
     printf '%s\n' "../$1 The package was created successfully."
@@ -41,6 +47,8 @@ INSTALL() {
   # List of tracks
   export dbtinypkg="${FAKE}/var/db/tinypkg"
   [ ! -d "${dbtinypkg}" ] && mkdir -p "$dbtinypkg" # Exist db dir of tracks?
+
+  CHECKEXT "$(basename $1)" # Check's of name package
 
   # VERIFY EXTENSION HERE
   printf '%b\n' "Intall Package: $1"
@@ -122,7 +130,7 @@ USAGE() {
 -h             : Display this help.
 -c             : Create package.
 -i             : Install package(s).
--l             : Lists installed package(s).
+-l             : Lists all installed package(s).
 --fakeroot DIR : Changes installation / from another directory. Used with -i
 -r             : Remove package(s).
 
