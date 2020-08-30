@@ -14,9 +14,6 @@
 # Format package.
 export pkgFormat='tar'
 
-# List of tracks
-export dbtinypkg='/var/db/tinypkg'
-
 # Support UNICODE off.
 export LC_ALL='C'; export LANG='C'
 
@@ -41,14 +38,15 @@ CREATEPKG() {
 
 # Install package
 INSTALL() {
-  [ ! -d "$dbtinypkg" ] && mkdir "$dbtinypkg" # Exist db dir of tracks?
+  # List of tracks
+  export dbtinypkg="${FAKE}/var/db/tinypkg"
+  [ ! -d "${dbtinypkg}" ] && mkdir -p "$dbtinypkg" # Exist db dir of tracks?
 
   # VERIFY EXTENSION HERE
   printf '%b\n' "Intall Package: $1"
 
   # Install package
   tar xvf "$1" -C "${FAKE}/" >> "${dbtinypkg}/$(basename $1)" || die "ERROR pkg $1 has not been installed."
-
   # clean tracking
   sed -i 's/^\.//g; /^\/$/d' "${dbtinypkg}/$(basename $1)" || printf '%s\n' "Error when clearing package track!"
 
@@ -136,7 +134,7 @@ case "$1" in
     if [ ! -d "$1" ]; then
       die "FAKEROOT: $1 don't exist. ABORTED"
     else
-      FAKE="$1"
+      FAKE="${1%/}" # cut / end, for not future problems.
       shift
     fi
     ;;
