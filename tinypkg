@@ -46,19 +46,19 @@ INSTALL() {
   printf '%b\n' "Intall Package: $1"
 
   # Install package
-  tar xvf "$1" -C "${FAKE}/" >> "${dbtinypkg}/$(basename $1)" || die "ERROR pkg $1 has not been installed."
+  tar xvf "$1" -C "${FAKE}/" >> "${dbtinypkg}/$(basename "$1")" || die "ERROR pkg $1 has not been installed."
   # clean tracking
-  sed -i 's/^\.//g; /^\/$/d' "${dbtinypkg}/$(basename $1)" || printf '%s\n' "Error when clearing package track!"
+  sed -i 's/^\.//g; /^\/$/d' "${dbtinypkg}/$(basename "$1")" || printf '%s\n' "Error when clearing package track!"
 
   # Need these variables to move the track correctly.
-  pkg4strip="$1"; stripext="${pkg4strip%.$pkgFormat}"; stripext="$(basename $stripext)"
+  pkg4strip="$1"; stripext="${pkg4strip%.$pkgFormat}"; stripext="$(basename "$stripext")"
 
   # Remove .extension of package, only pkg-version keep.
-  mv "${dbtinypkg}/$(basename $1)" "${dbtinypkg}/$stripext" || die "Error with the track."
+  mv "${dbtinypkg}/$(basename "$1")" "${dbtinypkg}/$stripext" || die "Error with the track."
 
   # Ok ok
   printf '%s\n' "DIR OF INSTALED: ${FAKE}/"
-  printf '%s\n' "TRACK: ${dbtinypkg}/$(basename $stripext)"
+  printf '%s\n' "TRACK: ${dbtinypkg}/$(basename "$stripext")"
   printf '%s\n' "------- Installation complete"
   return 0
 }
