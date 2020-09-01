@@ -66,3 +66,4 @@ Make sure you follow these guidelines:
 - [ ] Make it even faster.
 - [ ] Remove dirt in the code. (replacing external tools)
 - [ ] Create a post installation script
+- [ ] MD5 hash of each package when creating. And check when installing.
