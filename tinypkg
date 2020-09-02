@@ -3,7 +3,7 @@
 # AUTOR   : Jefferson 'Slackjeff' Carneiro
 # EMAIL   : jeffersoncarneiro AT slackjeff dot com dot br
 # Tinypkg : Create, install, remove package.
-# VERSION : 1.1.1
+# VERSION : 1.1.2
 #
 #VERY IMPORTANT note!
 # keep this program < 250 lines of code! And also maintain
@@ -18,15 +18,14 @@ export pkgFormat='tar'
 export LC_ALL='C'; export LANG='C'
 
 #=========================== FUNCTIONS
-basename() { printf '%s\n' "${1##*/}" ;} # An alternative to the real basename :)
+basename() { printf '%s\n' "${1##*/}" ;} # An alternative to the real basename.
+dirname() { printf '%s\n' "${1%/*}" ;} # An alternative to the real dirname.
 die() { printf '%s\n' "$@"; exit 1 ;} # All errors msgs ;)
 NULL() { [ -z "$1" ] && { echo "Name of package... SOFTWARE-VERSION.${pkgFormat}"; exit 1 ;} ;}
-
 # Check package extension and blabla.
 CHECKEXT() {
   # Created with tinypkg?
-  [ "$(printf '%s\n' ${1#*.})" != "$pkgFormat" ] && die "$1 Not created with tinypkg."
-
+  [ "$(printf '%s\n' ${1##*.})" != "$pkgFormat" ] && die "$1 Not created with tinypkg."
   # name of package have space?
   case "$1" in *' '*) die "Please, don't use spaces." ;; esac
 }
@@ -34,12 +33,22 @@ CHECKEXT() {
 # Make package
 CREATEPKG() {
   CHECKEXT "$(basename $1)" # Check's of name package
+  target="$(dirname $(pwd))"  # don't use ../ anymore.
   # creating the package a directory above.
-  if tar -cf ../"$1" .; then
-    printf '%s\n' "../$1 The package was created successfully."
+  if tar -cf "${target}/$1" .; then
+    printf '%s\n' "${target}/$1 The package was created successfully."
   else
     die "Error!"
   fi
+  ( # Create hash and exit subshell.
+    cd ..
+    [ ! -e "$1" ] && { printf '%s\n' "Package does not exist, hash cannot be created."; exit 1 ;}
+    if sha256sum "${1}" > "${1}.sha256sum"; then
+      printf '%s\n' "${1}.sha256sum was created"; return 0
+    else
+      die "$1.sha256sum not created!"
+    fi
+  )
 }
 
 # Install package
@@ -51,8 +60,8 @@ INSTALL() {
   CHECKEXT "$(basename $1)" # Check's of name package
 
   # VERIFY EXTENSION HERE
-  printf '%b\n' "Intall Package: $1"
 
+  printf '%s\n' "INSTALL PACKAGE: ${1}"
   # Install package
   tar xvf "$1" -C "${FAKE}/" >> "${dbtinypkg}/$(basename "$1")" || die "ERROR pkg $1 has not been installed."
   # clean tracking
@@ -155,7 +164,7 @@ case "$1" in
       shift
     fi
     ;;
-  -l) shift; LIST ;;
+  -l) LIST && exit 0 ;;
   -i) shift; while [ -n "$1" ]; do INSTALL "$1"; shift; done ;;
   -r) shift; while [ -n "$1" ]; do REMOVE "$1"; shift; done ;;
   *) USAGE ;;
