@@ -1,7 +1,7 @@
 
 # Tinypkg
 
-A low-level package manager, similar to 'dpkg' for Linux distributions, written in Shell POSIX. With tinypkg you can: create, install and remove packages in a universal way!
+A low-level package manager, similar to 'dpkg' for Linux distributions, written in Shell POSIX. With tinypkg you can: create, install, list and remove packages in a universal way!
 
 ## Installation
 
@@ -66,4 +66,4 @@ Make sure you follow these guidelines:
 - [ ] Make it even faster.
 - [ ] Remove dirt in the code. (replacing external tools)
 - [ ] Create a post installation script
-- [ ] MD5 hash of each package when creating. And check when installing. (security)
+- [x] MD5 hash of each package when creating. And check when installing. (security)
