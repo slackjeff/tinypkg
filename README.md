@@ -39,7 +39,7 @@ spkg -c leafpad-0.8.17.spkg
 spkg -i /home/$USER/bin/leafpad-0.18.17.spkg
 
 # Using relative path
-spkg -i leafpad-0.18.17.spkf
+spkg -i leafpad-0.18.17.spkg
 
 # Installing multiple packages
 spkg -i /tmp/*.spkg
