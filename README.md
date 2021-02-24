@@ -36,7 +36,7 @@ spkg -c leafpad-0.8.17.tar
 
 ```sh
 # Using absolute path
-spkg -i /home/slackjeff/bin/leafpad-0.18.17.tar
+spkg -i /home/$USER/bin/leafpad-0.18.17.tar
 
 # Using relative path
 spkg -i leafpad-0.18.17.tar
