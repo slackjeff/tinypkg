@@ -29,20 +29,20 @@ chmod +x spkg && cp spkg /usr/sbin
 If spaces are needed use underscores. e.g.: Software_editor-01.0424.tar'
 
 ```sh
-spkg -c leafpad-0.8.17.tar
+spkg -c leafpad-0.8.17.spkg
 ```
 
 ### Installing packages
 
 ```sh
 # Using absolute path
-spkg -i /home/$USER/bin/leafpad-0.18.17.tar
+spkg -i /home/$USER/bin/leafpad-0.18.17.spkg
 
 # Using relative path
-spkg -i leafpad-0.18.17.tar
+spkg -i leafpad-0.18.17.spkf
 
 # Installing multiple packages
-spkg -i /tmp/*.tar
+spkg -i /tmp/*.spkg
 ```
 
 ### Removing packages
