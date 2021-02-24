@@ -1,5 +1,5 @@
 
-# Tinypkg
+# SPKG - Simple Package Manager
 
 A low-level package manager, similar to 'dpkg', 'rpm' and 'pkgtool'. Created for Linux distributions, written in Shell POSIX. With tinypkg you can: create, install, list and remove packages in a universal way!
 
@@ -8,7 +8,7 @@ A low-level package manager, similar to 'dpkg', 'rpm' and 'pkgtool'. Created for
 **Use tinypkg only with root!**
 
 ```
-chmod +x tinypkg && cp tinypkg /usr/sbin
+chmod +x spkg && cp spkg /usr/sbin
 ```
 
 ## Options
@@ -28,20 +28,20 @@ chmod +x tinypkg && cp tinypkg /usr/sbin
 If spaces are needed use underscores. e.g.: Software_editor-01.0424.tar'
 
 ```sh
-tinypkg -c leafpad-0.8.17.tar
+spkg -c leafpad-0.8.17.tar
 ```
 
 ### Installing packages
 
 ```sh
 # Using absolute path
-tinypkg -i /home/slackjeff/bin/leafpad-0.18.17.tar
+spkg -i /home/slackjeff/bin/leafpad-0.18.17.tar
 
 # Using relative path
-tinypkg -i leafpad-0.18.17.tar
+spkg -i leafpad-0.18.17.tar
 
 # Installing multiple packages
-tinypkg -i /tmp/*.tar
+spkg -i /tmp/*.tar
 ```
 
 ### Removing packages
@@ -49,7 +49,7 @@ tinypkg -i /tmp/*.tar
 'Note! If there are multiple packages with the same name (e.g.: leafpad-version or leafpad-bin-version). It just shows you and does nothing!'
 
 ```sh
-tinypkg -r leafpad
+spkg -r leafpad
 ```
 
 ## If you are willing to contribute:
