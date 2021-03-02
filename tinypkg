@@ -42,7 +42,7 @@ CREATEPKG() {
   fi
   ( # Create hash and exit subshell.
     cd ..
-    [ ! -e "$1" ] && { printf '%s\n' "Package does not exist, hash cannot be created."; exit 1 ;}
+    [ ! -e "$1" ] && { printf '%s\n' 'Package does not exist, hash cannot be created.'; exit 1 ;}
     if sha256sum "${1}" > "${1}.sha256sum"; then
       printf '%s\n' "${1}.sha256sum was created"; return 0
     else
@@ -71,12 +71,12 @@ INSTALL() {
   pkg4strip="$1"; stripext="${pkg4strip%.$pkgFormat}"; stripext="$(basename "$stripext")"
 
   # Remove .extension of package, only pkg-version keep.
-  mv "${dbtinypkg}/$(basename "$1")" "${dbtinypkg}/$stripext" || die "Error with the track."
+  mv "${dbtinypkg}/$(basename "$1")" "${dbtinypkg}/$stripext" || die 'Error with the track.'
 
   # Ok ok
   printf '%s\n' "DIR OF INSTALED: ${FAKE}/"
   printf '%s\n' "TRACK: ${dbtinypkg}/$(basename "$stripext")"
-  printf '%s\n' "------- Installation complete"
+  printf '%s\n' '------- Installation complete'
   return 0
 }
 
@@ -89,7 +89,7 @@ REMOVE() {
   npkg=0 # no package found
   cd "$dbtinypkg" # for dont use 'more and more' basename.
   for list in *; do
-    if echo "$list" | grep -w -E "^$1" 1>/dev/null 2>/dev/null; then
+    if echo "$list" | grep -w -E "^$1" 1>/dev/null 2>&1; then
       printf '%s\n' "[FOUND] $list"
       pkgtrack="$list"
       mpkg="$((mpkg + 1))" # Inc
@@ -101,7 +101,7 @@ REMOVE() {
   if [ "$mpkg" -gt '1' ]; then
     printf '%s\n' "$mpkg occurrences found with '$1'. Use full name to remove!"
     exit 1
-  elif [ "$npkg" -gt '0' ] && [ "$mpkg" -lt '1' ]; then
+  elif [ "$npkg" -gt '0' -a "$mpkg" -lt '1' ]; then
     printf '%s\n' "No matches for $1"
     exit 0
   fi
