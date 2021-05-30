@@ -13,6 +13,7 @@
 #=========================== VARS
 # Format package.
 export pkgFormat='tar'
+export dbtinypkg="${FAKE}/var/db/tinypkg"
 
 # Support UNICODE off.
 export LC_ALL='C'; export LANG='C'
@@ -54,7 +55,6 @@ CREATEPKG() {
 # Install package
 INSTALL() {
   # List of tracks
-  export dbtinypkg="${FAKE}/var/db/tinypkg"
   [ ! -d "${dbtinypkg}" ] && mkdir -p "$dbtinypkg" # Exist db dir of tracks?
 
   CHECKEXT "$(basename $1)" # Check's of name package
