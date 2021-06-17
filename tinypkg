@@ -54,6 +54,7 @@ CREATEPKG() {
 
 # Install package
 INSTALL() {
+  export dbtinypkg="${FAKE}/var/db/tinypkg" 
   # List of tracks
   [ ! -d "${dbtinypkg}" ] && mkdir -p "$dbtinypkg" # Exist db dir of tracks?
 
